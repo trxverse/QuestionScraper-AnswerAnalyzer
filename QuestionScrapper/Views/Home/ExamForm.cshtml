@@ -1,0 +1,18 @@
+﻿@* @model QuestionScrapper.Models.QuestionPaper;
+@{
+    ViewData["Title"] = "Exam";
+}
+<form asp-action="SubmitExam" method="post">
+    @foreach (var group in Model.Groups)
+    {
+        <h2>@group.GroupName</h2>
+        @foreach (var q in group.Questions)
+        {
+            <div>
+                <p>@q.Number. @q.Text (@q.Marks marks)</p>
+                <textarea name="answers[@q.Id]" rows="3" cols="80"></textarea>
+            </div>
+        }
+    }
+    <button type="submit">Submit Exam</button>
+</form> *@

@@ -1,0 +1,24 @@
+﻿@if (!string.IsNullOrEmpty(ViewBag.Text))
+{
+    @if (TempData["error"] != null)
+    {
+        <p>@TempData["error"]</p>
+    }
+    <h1 class="text-success-emphasis">Processing completed!</h1>
+    <h2>Extracted Text</h2>
+
+    <pre>
+        @ViewBag.Text
+        </pre>
+    <div class="d-flex gap-2">
+        <a asp-action="Index"><button class="btn btn-primary" type="">Reupload</button></a>
+        <form asp-action="save" method="post">
+            <input type="hidden" name="data" value="@ViewBag.Text"></input>
+            <button class="btn btn-primary" type="submit"> Save </button>
+        </form>
+    </div>
+}
+else
+{
+        <p>Empty file</p>
+}
