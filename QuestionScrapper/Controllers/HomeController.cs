@@ -1,9 +1,10 @@
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using QuestionScrapper.Data;
 using QuestionScrapper.Models;
 using QuestionScrapper.Services;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace QuestionScrapper.Controllers
 {
@@ -110,7 +111,21 @@ namespace QuestionScrapper.Controllers
                     CreatedAt = DateTime.Now
                 };
                 _context.QuestionPapers.Add(question);
-                _context.SaveChanges();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException ex)
+                {
+                    // This will show you the real error
+                    Console.WriteLine($"Inner Exception: {ex.InnerException?.Message}");
+
+                    if (ex.InnerException?.InnerException != null)
+                    {
+                        Console.WriteLine($"Detailed Error: {ex.InnerException.InnerException.Message}");
+                    }
+                    throw;
+                }
                 return RedirectToAction("Bank");
             }
             catch (Exception ex)
