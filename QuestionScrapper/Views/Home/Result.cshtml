@@ -12,9 +12,9 @@
         </pre>
     <div class="d-flex gap-2">
         <a asp-action="Index"><button class="btn btn-primary" type="">Reupload</button></a>
-        <form asp-action="save" method="post">
+        <form asp-action="ExamForm" method="post">
             <input type="hidden" name="data" value="@ViewBag.Text"></input>
-            <button class="btn btn-primary" type="submit"> Save </button>
+            <button class="btn btn-primary" type="submit"> Take Exam </button>
         </form>
     </div>
 }

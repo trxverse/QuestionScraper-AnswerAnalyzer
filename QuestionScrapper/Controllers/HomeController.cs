@@ -16,14 +16,14 @@ namespace QuestionScrapper.Controllers
         private readonly OcrService _ocr;
         private readonly QuestionParser _parser;
         private readonly ApplicationDbContext _context;
-
-
+        private readonly AnswerAnalyzer _answerAnalyzer;
 
         public HomeController(ILogger<HomeController> logger, IWebHostEnvironment env,
-            PdfTextService pdf,
-            OcrService ocr,
-            QuestionParser parser,
-            ApplicationDbContext context)
+    PdfTextService pdf,
+    OcrService ocr,
+    QuestionParser parser,
+    ApplicationDbContext context,
+    AnswerAnalyzer aa)
         {
             _logger = logger;
             _env = env;
@@ -31,6 +31,8 @@ namespace QuestionScrapper.Controllers
             _ocr = ocr;
             _parser = parser;
             _context = context;
+            _answerAnalyzer = aa;
+
         }
 
 
@@ -73,7 +75,7 @@ namespace QuestionScrapper.Controllers
                 else
                 {
                     extractedText = "Ocr disables for test";
-                    //extractedText = _ocr.RunOcr(filePath);
+                    extractedText = _ocr.RunOcr(filePath);
                 }
 
                 // Parse questions
@@ -95,6 +97,25 @@ namespace QuestionScrapper.Controllers
                 return View("Index");
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> ExamForm(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                TempData["error"] = "no data to save";
+                return RedirectToAction("Result");
+            }
+            var parsed = _parser.Parse(data);
+            return View("ExamForm", parsed);
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> SubmitExam(string questions, string answers)
+        {
+            var result = await _answerAnalyzer.EvaluateAnswers(questions, answers);  
+
+        }
+
         [HttpPost]
         public async Task<IActionResult> Save(string data)
         {
@@ -151,9 +172,6 @@ namespace QuestionScrapper.Controllers
         }
 
 
-
-        [HttpPost]
-        //public async Task<IActionResult> Register
 
         public IActionResult Privacy()
         {
