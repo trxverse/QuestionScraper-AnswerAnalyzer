@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using QuestionScrapper.Services;
 using QuestionScrapper.Data;
+using QuestionScrapper.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<PdfTextService>();
 builder.Services.AddScoped<OcrService>();
 builder.Services.AddScoped<QuestionParser>();
+builder.Services.AddScoped<AnswerAnalyzerService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(

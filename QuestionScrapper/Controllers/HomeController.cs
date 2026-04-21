@@ -16,14 +16,14 @@ namespace QuestionScrapper.Controllers
         private readonly OcrService _ocr;
         private readonly QuestionParser _parser;
         private readonly ApplicationDbContext _context;
-        private readonly AnswerAnalyzer _answerAnalyzer;
+        private readonly AnswerAnalyzerService _answerAnalyzer;
 
         public HomeController(ILogger<HomeController> logger, IWebHostEnvironment env,
     PdfTextService pdf,
     OcrService ocr,
     QuestionParser parser,
     ApplicationDbContext context,
-    AnswerAnalyzer aa)
+    AnswerAnalyzerService aa)
         {
             _logger = logger;
             _env = env;
@@ -110,78 +110,83 @@ namespace QuestionScrapper.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> SubmitExam(string questions, string answers)
+        public async Task<IActionResult> SubmitExam(List<Question> questions, List<StudentAnswer> answers)
         {
-            var result = await _answerAnalyzer.EvaluateAnswers(questions, answers);  
+            List<double> sum = new List<double>();
 
+            var result = _answerAnalyzer.EvaluateAnswers(questions, answers);
+
+            ViewBag.Text = result.ToString();
+            return View("ExamResult");
         }
+    
 
-        [HttpPost]
-        public async Task<IActionResult> Save(string data)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(data))
-                {
-                    TempData["error"] = "no data to save";
-                    return RedirectToAction("Result");
-                }
-                var question = new QuestionPaper
-                {
-                    ExtractedText = data,
-                    CreatedAt = DateTime.Now
-                };
-                _context.QuestionPapers.Add(question);
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateException ex)
-                {
-                    // This will show you the real error
-                    Console.WriteLine($"Inner Exception: {ex.InnerException?.Message}");
+//[HttpPost]
+//public async Task<IActionResult> Save(string data)
+//{
+//    try
+//    {
+//        if (string.IsNullOrEmpty(data))
+//        {
+//            TempData["error"] = "no data to save";
+//            return RedirectToAction("Result");
+//        }
+//        var question = new QuestionPaper
+//        {
+//            ExtractedText = data,
+//            CreatedAt = DateTime.Now
+//        };
+//        _context.QuestionPapers.Add(question);
+//        try
+//        {
+//            await _context.SaveChangesAsync();
+//        }
+//        catch (DbUpdateException ex)
+//        {
+//            // This will show you the real error
+//            Console.WriteLine($"Inner Exception: {ex.InnerException?.Message}");
 
-                    if (ex.InnerException?.InnerException != null)
-                    {
-                        Console.WriteLine($"Detailed Error: {ex.InnerException.InnerException.Message}");
-                    }
-                    throw;
-                }
-                return RedirectToAction("Bank");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.InnerException?.Message);
-                throw;
-            }
-        }
+//            if (ex.InnerException?.InnerException != null)
+//            {
+//                Console.WriteLine($"Detailed Error: {ex.InnerException.InnerException.Message}");
+//            }
+//            throw;
+//        }
+//        return RedirectToAction("Bank");
+//    }
+//    catch (Exception ex)
+//    {
+//        Console.WriteLine(ex.InnerException?.Message);
+//        throw;
+//    }
+//}
 
-        public IActionResult Bank()
-        {
-            var questions = _context.QuestionPapers.ToList();
-            return View(questions);
-        }
-        public IActionResult Register()
-        {
-            return View();
-        }
+//public IActionResult Bank()
+//{
+//    var questions = _context.QuestionPapers.ToList();
+//    return View(questions);
+//}
+//public IActionResult Register()
+//{
+//    return View();
+//}
 
-        public IActionResult Login()
-        {
-            return View();
-        }
+//public IActionResult Login()
+//{
+//    return View();
+//}
 
 
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+public IActionResult Privacy()
+{
+    return View();
+}
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+public IActionResult Error()
+{
+    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+}
     }
 }

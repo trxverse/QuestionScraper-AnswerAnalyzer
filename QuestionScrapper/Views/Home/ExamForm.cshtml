@@ -1,19 +1,18 @@
-﻿@model List<Question>
+﻿@using QuestionScrapper.Models;
+@model List<Question>
 @{
     ViewData["Title"] = "Exam";
 }
 <form asp-action="SubmitExam" method="post">
-    @foreach (var q in Model)
-    {
-            <div>
-                <p>@q.Id. @q.Text</p>
-                <textarea name="answers[@q.Id]" rows="3" cols="80"></textarea>
-            </div>
-        
-    }
+    @for (int i= 0; i < Model.Count; i++)
+        {
+        <div class="mb-3">
+            <p>@(i + 1). @Model[i].Text</p>
+            @* sending question id *@
+            <input type="hidden" name="questions[@i]" value=" @Model[i].Text" />
+            <textarea name="answers[@i]" rows="3" cols="80" class="form-control"></textarea>
+        </div>
 
+    }
     <button type="submit">Submit Exam</button>
-</form>
-<form asp-action="ExamForm" method="post">
-    <button class="btn btn-primary" type="submit"> Take Exam </button>
 </form>

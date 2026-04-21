@@ -1,17 +1,2 @@
 ﻿@model QuestionScrapper.Models.ExamSubmission
-<table>
-    <tr>
-        <th>Question</th>
-        <th>Answer</th>
-        <th>Marks</th>
-    </tr>
-    @for (int i = 0; i < Model.Answers.Count; i++)
-    {
-        <tr>
-            <td>@Model.Answers[i].QuestionId</td>
-            <td>@Model.Answers[i].AnswerText</td>
-            @* <td>@Model.Answers[i].ObtainedMarks</td> *@
-        </tr>
-    }
-</table>
-<p><strong>Total Marks: @Model.TotalMarks</strong></p>
+<p><strong>Total Marks: @ViewBag.Text</strong></p>
