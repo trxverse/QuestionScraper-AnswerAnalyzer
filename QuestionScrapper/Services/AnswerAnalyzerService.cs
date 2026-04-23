@@ -5,30 +5,58 @@ namespace QuestionScrapper.Services
 {
     public class AnswerAnalyzerService
     {
+        private readonly EmbeddingService _embedding;
 
-        public int EvaluateAnswers(List<Question> questions, List<StudentAnswer> answers)
+        public AnswerAnalyzerService(EmbeddingService embedding)
         {
-            var summark<int>= new summark<int> = 0;
-            for (int i = 0; i < questions.Count; i++) { }
-            var questionembed = GetEmbedding(questions[i]);
-            var answersembed = GetEmbedding(answers[i]);
-            similarity = cosine(questionembed, answersembed);
-            if similarity > 0.75{
-                obtainedmark = 5;
-            }
-            else if similarity > .5{
-                obtainedmark = 3;
-            }
-            else
-            {
-                obtainedmark = 0;
-            }
-            summark = sumark.Add(obtainedemark);
-            return 0;
+            _embedding = embedding;
         }
-        public int GetEmbedding(Question embed) { }
-        public int cosine(int a, int b) { }
+
+        public async Task<int>EvaluateAnswers(List<Question> questions, List<StudentAnswer> answers)
+        {
+            int totalMarks = 0;
+            for (int i = 0; i < questions.Count; i++)
+            {
+                var questionText = questions[i].Text;
+                var answerText = answers[i].AnswerText;
+
+                var questionembed = await _embedding.GetEmbedding(questionText);
+                var answersembed =await _embedding.GetEmbedding(answerText);
+
+                var similarity = cosine(questionembed, answersembed);
+                Console.WriteLine("similariyt answeranz out"+similarity.ToString());
+                int obtainedMark;
+                if (similarity > 0.75){
+                    obtainedMark = 5;
+                }
+                else if (similarity > .5){
+                    obtainedMark = 3;
+                }
+                else
+                {
+                    obtainedMark = 0;
+                }
+                totalMarks += obtainedMark;
+            }
+            Console.WriteLine("totalmarks"+totalMarks);
+            return totalMarks;
+
+        }
+        public double cosine(float []a, float []b)
+        {
+
+            double dot = 0, magA = 0, magB = 0;
+            for (int i = 0; i < a.Length; i++)
+            {
+                dot += a[i] * b[i];
+                magA += a[i] * a[i];
+                magB += b[i] * b[i];
+            }
+
+            return dot / (Math.Sqrt(magA) * Math.Sqrt(magB));
+        }
     }
-
-
 }
+
+
+

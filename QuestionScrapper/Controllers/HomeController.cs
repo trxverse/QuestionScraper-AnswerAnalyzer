@@ -114,8 +114,8 @@ namespace QuestionScrapper.Controllers
         {
             List<double> sum = new List<double>();
 
-            var result = _answerAnalyzer.EvaluateAnswers(questions, answers);
-
+            var result = await _answerAnalyzer.EvaluateAnswers(questions, answers);
+            Console.WriteLine(result+" in the submit exam receiving");
             ViewBag.Text = result.ToString();
             return View("ExamResult");
         }

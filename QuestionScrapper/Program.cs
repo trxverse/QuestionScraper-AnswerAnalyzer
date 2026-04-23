@@ -11,6 +11,7 @@ builder.Services.AddScoped<PdfTextService>();
 builder.Services.AddScoped<OcrService>();
 builder.Services.AddScoped<QuestionParser>();
 builder.Services.AddScoped<AnswerAnalyzerService>();
+builder.Services.AddScoped<EmbeddingService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
