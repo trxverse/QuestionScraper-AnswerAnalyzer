@@ -4,6 +4,7 @@ This system extracts questions from question papers and provides an automated an
 
 ## Core Features
 - Question extraction from PDFs and documents
+- Vectorization
 - Semantic answer evaluation
 - Cosine similarity based grading
 
