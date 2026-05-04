@@ -1,32 +1,24 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using static System.Net.WebRequestMethods;
 namespace QuestionScrapper.Services;
 
 
 public class EmbeddingService
 {
-private readonly HttpClient _client;
+    public float[] GetEmbedding(string text)
+    {
+        var words = text.ToLower().Split(' ');
+        var vector = new float[100];
 
-public EmbeddingService()
-{
-    _client = new HttpClient();
-    //_client.DefaultRequestHeaders.Add("Authorization", "Bearer YOUR_HF_API_KEY");
-}
+        foreach (var word in words)
+        {
+            int index = Math.Abs(word.GetHashCode()) % 100;
+            vector[index] += 1;
+        }
 
-public async Task<float[]> GetEmbedding(string text)
-{
-    var url = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2";
-
-    var json = JsonSerializer.Serialize(text);
-    var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-    var response = await _client.PostAsync(url, content);
-    var result = await response.Content.ReadAsStringAsync();
-
-    // parse response (list of floats)
-    var embedding = JsonSerializer.Deserialize<float[]>(result);
-        Console.WriteLine("embedservice" + embedding);
-    return embedding ?? new float[0];
-}
+        return vector;
+    }
 }

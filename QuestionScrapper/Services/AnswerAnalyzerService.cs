@@ -15,6 +15,8 @@ namespace QuestionScrapper.Services
         public async Task<int>EvaluateAnswers(List<Question> questions, List<StudentAnswer> answers)
         {
             int totalMarks = 0;
+            Console.WriteLine("questionno" + questions.Count);
+            Console.WriteLine("answer no " + answers.Count);
             for (int i = 0; i < questions.Count; i++)
             {
                 var questionText = questions[i].Text;
@@ -36,6 +38,7 @@ namespace QuestionScrapper.Services
                 {
                     obtainedMark = 0;
                 }
+                Console.WriteLine("obotalmarks" + obtainedMark);
                 totalMarks += obtainedMark;
             }
             Console.WriteLine("totalmarks"+totalMarks);

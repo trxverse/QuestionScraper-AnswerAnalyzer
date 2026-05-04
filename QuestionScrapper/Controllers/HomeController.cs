@@ -78,10 +78,6 @@ namespace QuestionScrapper.Controllers
                     extractedText = _ocr.RunOcr(filePath);
                 }
 
-                // Parse questions
-                //var parsed = _parser.Parse(extractedText);
-
-
                 ViewBag.Text = extractedText;
 
                 return View("Result");
@@ -112,6 +108,8 @@ namespace QuestionScrapper.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitExam(List<Question> questions, List<StudentAnswer> answers)
         {
+            Console.WriteLine("questionno in submit controller" + questions.Count);
+            Console.WriteLine("answer no in submit controller" + answers.Count);
             List<double> sum = new List<double>();
 
             var result = await _answerAnalyzer.EvaluateAnswers(questions, answers);

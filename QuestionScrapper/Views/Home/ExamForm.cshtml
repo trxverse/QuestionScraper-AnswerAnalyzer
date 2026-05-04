@@ -8,9 +8,11 @@
         {
         <div class="mb-3">
             <p>@(i + 1). @Model[i].Text</p>
-            @* sending question id *@
-            <input type="hidden" name="questions[@i]" value=" @Model[i].Text" />
-            <textarea name="answers[@i]" rows="3" cols="80" class="form-control"></textarea>
+            @* sending question text *@
+            <input type="hidden" name="questions[@i].Text" value="@Model[i].Text" />
+            @* sending ans *@
+            <textarea name="answers[@i].AnswerText" rows="3" cols="80" class="form-control"></textarea>
+
         </div>
 
     }
